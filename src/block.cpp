@@ -6,7 +6,6 @@
 #include <vector>
 
 #ifndef __CLASS_BLOCK
-
 #define __CLASS_BLOCK
 
 class Block {

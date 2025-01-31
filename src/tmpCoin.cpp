@@ -9,6 +9,9 @@
 
 // #include <bits/stdc++.h>
 
+#ifndef __CLASS_TMPCOIN
+#define __CLASS_TMPCOIN
+
 class tmpCoin {
 public:
   std::vector<Block *> chain;
@@ -92,3 +95,5 @@ private:
     return oss.str();
   }
 };
+
+#endif
