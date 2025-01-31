@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SRC_DIR="src"
+SRC_DIR="./src"
 
 STYLE="file"
 
