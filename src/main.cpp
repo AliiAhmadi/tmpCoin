@@ -15,16 +15,24 @@ std::string node_uuid() {
 int main(void) {
 
   httplib::Server server;
-
-  server.Get("/", [](const httplib::Request &req, httplib::Response &res) {
-    res.set_content("Hello, World!", "text/plain");
-  });
-
   std::string uuid = node_uuid();
 
   auto x = new tmpCoin{};
-  auto trx = new Transaction("ali", "reza", 2.1);
-  x->new_trx(trx);
+
+  server.Get("/mine", [](const httplib::Request &req, httplib::Response &res) {
+    res.set_content("{\"message\": \"I will mine one block!\"}",
+                    "application/json");
+  });
+
+  server.Get("/trx/new", [](const httplib::Request &req,
+                            httplib::Response &res) {
+    res.set_content("{\"message\": \"A new trx added\"}", "application/json");
+  });
+
+  server.Get("/me",
+             [uuid](const httplib::Request &req, httplib::Response &res) {
+               res.set_content("{\"uuid\":" + uuid + "}", "application/json");
+             });
 
   server.listen("0.0.0.0", 3000);
 
