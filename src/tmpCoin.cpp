@@ -21,11 +21,6 @@ public:
 
     // Create the first block of chain.
     this->new_block("0");
-    this->new_block();
-    this->new_block();
-
-    std::cout << this->chain[this->chain.size() - 1]->get_prev_hash()
-              << std::endl;
   }
 
   /** */
@@ -57,7 +52,14 @@ public:
   }
 
   /** */
-  void last_block() {}
+  Block *last_block() {
+    if (this->chain.size() == 0)
+      return NULL;
+
+    return this->chain[this->chain.size() - 1];
+  }
+
+  void proof_of_work() {}
 
 private:
   static std::string to_hex(size_t hash_value) {
