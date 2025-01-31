@@ -1,4 +1,5 @@
 /** */
+#include "json.hpp"
 #include "trx.cpp"
 #include <ctime>
 #include <iostream>
@@ -7,6 +8,8 @@
 
 #ifndef __CLASS_BLOCK
 #define __CLASS_BLOCK
+
+using json = nlohmann::json;
 
 class Block {
 private:
@@ -47,6 +50,21 @@ public:
     oss << this->proof << "|" << this->prev_hash;
 
     return oss.str();
+  }
+
+  json to_json() const {
+    json j;
+    j["index"] = this->index;
+    j["timestamp"] = this->timestamp;
+
+    for (auto trx : this->trxs) {
+      j["trxs"].push_back(trx->to_json());
+    }
+
+    j["proof"] = this->proof;
+    j["prev_hash"] = this->prev_hash;
+
+    return j;
   }
 };
 
