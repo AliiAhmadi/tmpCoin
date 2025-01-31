@@ -1,7 +1,10 @@
 /** */
+#include "crow.h"
 #include "tmpCoin.cpp"
 
 int main(void) {
+
+  crow::SimpleApp app;
 
   auto x = new tmpCoin{};
   auto trx = new Transaction("ali", "reza", 2.1);
