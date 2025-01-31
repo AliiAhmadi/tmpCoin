@@ -9,15 +9,17 @@ private:
   time_t timestamp;
   long long index;
   std::vector<Transaction *> trxs;
-  std::string proof;
+  double proof;
+  std::string prev_hash;
 
 public:
   Block(long long index, time_t timestamp, std::vector<Transaction *> trxs,
-        std::string proof) {
+        double proof, std::string previous_hash) {
     this->index = index;
     this->timestamp = timestamp;
     this->trxs = trxs;
     this->proof = proof;
+    this->prev_hash = previous_hash;
   }
 
   long long get_index() { return this->index; }
@@ -26,5 +28,5 @@ public:
 
   std::vector<Transaction *> get_trxs() { return this->trxs; }
 
-  std::string get_proof() { return this->proof; }
+  double get_proof() { return this->proof; }
 };
