@@ -14,7 +14,7 @@ private:
   time_t timestamp;
   long long index;
   std::vector<Transaction *> trxs;
-  double proof;
+  long long proof;
   std::string prev_hash;
 
 public:
@@ -33,7 +33,7 @@ public:
 
   std::vector<Transaction *> get_trxs() { return this->trxs; }
 
-  double get_proof() { return this->proof; }
+  long long get_proof() { return this->proof; }
 
   std::string get_prev_hash() { return this->prev_hash; }
 

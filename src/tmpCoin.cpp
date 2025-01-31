@@ -24,7 +24,7 @@ public:
   }
 
   /** */
-  Block *new_block(const std::string prev_hash = "", double proof = 0.) {
+  Block *new_block(const std::string prev_hash = "", long long proof = 0) {
     Block *blk = new Block(
         this->chain.size() + 1, std::time(0), this->current_trxs, proof,
         (prev_hash == "" ? tmpCoin::hash(this->chain[this->chain.size() - 1])
@@ -59,12 +59,36 @@ public:
     return this->chain[this->chain.size() - 1];
   }
 
-  void proof_of_work() {}
+  bool valid_proof(long long last_proof, long long proof) {
+    std::string now_proof =
+        this->proof_to_string(last_proof) + proof_to_string(proof);
+
+    std::hash<std::string> hasher;
+    size_t hash = hasher(now_proof);
+    std::string hash_string = tmpCoin::to_hex(hash);
+
+    return hash_string.substr(14, 2) == "ff";
+  }
+
+  long long proof_of_work(long long last_proof) {
+    long long proof = 0;
+
+    while (!this->valid_proof(last_proof, proof))
+      proof++;
+
+    return proof;
+  }
 
 private:
   static std::string to_hex(size_t hash_value) {
     std::stringstream ss;
     ss << std::hex << std::setw(16) << std::setfill('0') << hash_value;
     return ss.str();
+  }
+
+  std::string proof_to_string(long long proof) {
+    std::ostringstream oss;
+    oss << proof;
+    return oss.str();
   }
 };
