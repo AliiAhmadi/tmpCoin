@@ -14,3 +14,8 @@ The genesis block from `/chain` path:
     "length": 1
 }
 ```
+
+## What used?
+
+- httplib for API routes
+- nlohmann::json for json formating and stringify objects
