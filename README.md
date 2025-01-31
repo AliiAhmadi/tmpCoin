@@ -15,7 +15,7 @@ The genesis block from `/chain` path:
 }
 ```
 
-## What used?
+## What were used?
 
 - httplib for API routes
 - nlohmann::json for json formating and stringify objects
