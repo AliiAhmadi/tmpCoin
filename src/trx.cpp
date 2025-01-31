@@ -1,3 +1,4 @@
+/** */
 class Transaction {
 public:
   Transaction() {}

@@ -1,3 +1,5 @@
+/** */
+#include "block.cpp"
 #include "trx.cpp"
 #include <iostream>
 #include <vector>
@@ -5,13 +7,24 @@
 
 class tmpCoin {
 public:
-  std::vector<int> chain;
+  std::vector<Block> chain;
   Transaction *current_trx;
+
+  /** */
   tmpCoin() {
-    this->chain = std::vector<int>();
+    this->chain = std::vector<Block>();
     this->current_trx = new Transaction();
   }
-  void new_block() {
-    // this->chain
-  }
+
+  /** */
+  void new_block() {}
+
+  /** */
+  void new_trx() {}
+
+  /** */
+  void hash() {}
+
+  /** */
+  void last_block() {}
 };

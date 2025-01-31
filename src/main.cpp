@@ -1,3 +1,4 @@
+/** */
 #include "tmpCoin.cpp"
 
 int main(void) {
