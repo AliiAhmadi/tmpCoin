@@ -1,14 +1,12 @@
 /** */
 #include "block.cpp"
-
-#ifndef __TRX_CLASS
-
 #include "trx.cpp"
+#include <sstream>
 
-#endif
-
+#include <iomanip>
 #include <iostream>
 #include <vector>
+
 // #include <bits/stdc++.h>
 
 class tmpCoin {
@@ -23,10 +21,15 @@ public:
 
     // Create the first block of chain.
     this->new_block("0");
+    this->new_block();
+    this->new_block();
+
+    std::cout << this->chain[this->chain.size() - 1]->get_prev_hash()
+              << std::endl;
   }
 
   /** */
-  void new_block(const std::string prev_hash = "", double proof = 0.) {
+  Block *new_block(const std::string prev_hash = "", double proof = 0.) {
     Block *blk = new Block(
         this->chain.size() + 1, std::time(0), this->current_trxs, proof,
         (prev_hash == "" ? tmpCoin::hash(this->chain[this->chain.size() - 1])
@@ -35,14 +38,31 @@ public:
     // Clear all mempool.
     this->current_trxs.clear();
     this->chain.push_back(blk);
+
+    return blk;
   }
 
   /** */
   void new_trx(Transaction *trx) { this->current_trxs.push_back(trx); }
 
   /** */
-  static std::string hash(Block *blk) {}
+  static std::string hash(Block *blk) {
+    const std::string serializedBlock = blk->serialize();
+    std::hash<std::string> hasher;
+
+    size_t hash = hasher(serializedBlock);
+    std::string hash_string = tmpCoin::to_hex(hash);
+
+    return hash_string;
+  }
 
   /** */
   void last_block() {}
+
+private:
+  static std::string to_hex(size_t hash_value) {
+    std::stringstream ss;
+    ss << std::hex << std::setw(16) << std::setfill('0') << hash_value;
+    return ss.str();
+  }
 };

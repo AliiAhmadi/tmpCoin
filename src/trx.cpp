@@ -1,6 +1,7 @@
 /** */
 #include <iostream>
 
+#ifndef __TRX_CLASS
 #define __TRX_CLASS
 
 class Transaction {
@@ -14,3 +15,5 @@ public:
     this->amount = amount;
   }
 };
+
+#endif
