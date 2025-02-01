@@ -16,14 +16,16 @@ class tmpCoin {
 public:
   std::vector<Block *> chain;
   std::vector<Transaction *> current_trxs;
+  std::string node_uuid;
 
   /** */
-  tmpCoin() {
+  tmpCoin(std::string node_uuid) {
     this->chain = std::vector<Block *>();
     this->current_trxs = std::vector<Transaction *>();
+    this->node_uuid = node_uuid;
 
     // Create first transaction in genesis block.
-    this->new_trx(new Transaction("ali", "ali", 1000));
+    this->new_trx(new Transaction("0", this->node_uuid, 1000));
     // Create the first block of chain.
     this->new_block("0");
   }
@@ -75,7 +77,10 @@ public:
     size_t hash = hasher(now_proof);
     std::string hash_string = tmpCoin::to_hex(hash);
 
-    return hash_string.substr(14, 2) == "ff";
+    /** */
+    // std::cout << hash_string << std::endl;
+
+    return hash_string.substr(13, 3) == "fff";
   }
 
   long long proof_of_work(long long last_proof) {

@@ -20,13 +20,53 @@ int main(void) {
   httplib::Server server;
   std::string uuid = node_uuid();
 
-  auto blockchain = new tmpCoin{};
+  auto blockchain = new tmpCoin{uuid};
 
-  server.Get("/mine", [](const httplib::Request &req, httplib::Response &res) {
-    res.set_content("{\"message\": \"I will mine one block!\"}",
-                    "application/json");
+  /**
+   *
+   */
+  server.Get("/mine", [blockchain, uuid](const httplib::Request &req,
+                                         httplib::Response &res) {
+    auto last_blk = blockchain->last_block();
+    auto last_proof = last_blk->get_proof();
+    auto proof = blockchain->proof_of_work(last_proof);
+
+    blockchain->new_trx(new Transaction("0", uuid, 50));
+    std::string prev_hash = tmpCoin::hash(last_blk);
+    auto new_blk = blockchain->new_block(prev_hash, proof);
+
+    json response_json;
+    response_json["message"] = "new block created";
+    response_json["hash"] = tmpCoin::hash(new_blk);
+    response_json["new_block"] = new_blk->to_json();
+    response_json["timestamp"] = std::time(0);
+    res.status = 200;
+
+    res.set_content(response_json.dump(), "application/json");
   });
 
+  /**
+   * Create new Transaction.
+   * This callback function just accept POST method and some required data from
+   * client. if does not specify them will got 400 http status in response and
+   * a human readable message for client to tell what data need to add to
+   * request body.
+   *
+   * ## Request body should be in json format. if not some error will raise.
+   * ## TODO: fix internal server error when request format something other that
+   * json.
+   *
+   * This callback will create a new transaction and add it to mempool of this
+   * node.
+   * ## In this version we not send broadcast to other nodes to tell them this
+   * new transaction.
+   * ## I ignored that to avoid code complexity.
+   *
+   * Required request body must contain: {"sender", "recipient", "amount"}
+   *
+   * In response if all things works correctly client will got the created
+   * transaction in json format in response body.
+   */
   server.Post("/trxs/new", [uuid, blockchain](const httplib::Request &req,
                                               httplib::Response &res) {
     json response_json;
@@ -76,11 +116,20 @@ int main(void) {
     res.set_content(response_json.dump(), "application/json");
   });
 
+  /**
+   * Get information about this node.
+   * Contain node_uuid
+   *
+   * body ofthis callback function need a improvement and should use json
+   * instead of concatenate strings manualy.
+   * ## Just accept GET http method for this path.
+   */
   server.Get("/me",
              [uuid](const httplib::Request &req, httplib::Response &res) {
                res.set_content("{\"uuid\":" + uuid + "}", "application/json");
              });
 
+  /** */
   server.Get("/chain",
              [blockchain](const httplib::Request &req, httplib::Response &res) {
                struct chain {
