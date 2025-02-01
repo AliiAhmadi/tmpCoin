@@ -22,6 +22,8 @@ public:
     this->chain = std::vector<Block *>();
     this->current_trxs = std::vector<Transaction *>();
 
+    // Create first transaction in genesis block.
+    this->new_trx(new Transaction("ali", "ali", 1000));
     // Create the first block of chain.
     this->new_block("0");
   }
