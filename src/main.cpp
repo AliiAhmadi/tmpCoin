@@ -27,9 +27,53 @@ int main(void) {
                     "application/json");
   });
 
-  server.Get("/trxs/new", [](const httplib::Request &req,
-                             httplib::Response &res) {
-    res.set_content("{\"message\": \"A new trx added\"}", "application/json");
+  server.Post("/trxs/new", [uuid, blockchain](const httplib::Request &req,
+                                              httplib::Response &res) {
+    json response_json;
+    response_json["node_uuid"] = uuid;
+
+    if (req.body.empty()) {
+      res.status = 400;
+      response_json["message"] = "body can not be empty";
+      res.set_content(response_json.dump(), "application/json");
+      return;
+    }
+
+    json received_json = json::parse(req.body);
+
+    if (!received_json.contains("sender")) {
+      response_json["message"] = "sender can not be empty";
+      res.status = 400;
+      res.set_content(response_json.dump(), "application/json");
+      return;
+    }
+
+    if (!received_json.contains("recipient")) {
+      response_json["message"] = "recipient can not be empty";
+      res.status = 400;
+      res.set_content(response_json.dump(), "application/json");
+      return;
+    }
+
+    if (!received_json.contains("amount")) {
+      response_json["message"] = "amount can not be empty";
+      res.status = 400;
+      res.set_content(response_json.dump(), "application/json");
+      return;
+    }
+
+    std::string sender = received_json.at("sender");
+    std::string recipient = received_json.at("recipient");
+    double amount = received_json.at("amount").get<double>();
+
+    Transaction *trx =
+        blockchain->new_trx(new Transaction(sender, recipient, amount));
+
+    response_json["timestamp"] = std::time(0);
+
+    res.status = 200;
+    response_json["new_trx"] = trx->to_json();
+    res.set_content(response_json.dump(), "application/json");
   });
 
   server.Get("/me",

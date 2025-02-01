@@ -41,7 +41,10 @@ public:
   }
 
   /** */
-  void new_trx(Transaction *trx) { this->current_trxs.push_back(trx); }
+  Transaction *new_trx(Transaction *trx) {
+    this->current_trxs.push_back(trx);
+    return trx;
+  }
 
   /** */
   static std::string hash(Block *blk) {
