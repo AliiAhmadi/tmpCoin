@@ -8,7 +8,14 @@ The genesis block from `/chain` path:
             "index": 1,
             "prev_hash": "0",
             "proof": 0,
-            "timestamp": 1738352526
+            "timestamp": 1738383667,
+            "trxs": [
+                {
+                    "amount": 1000.0,
+                    "recipient": "ali",
+                    "sender": "ali"
+                }
+            ]
         }
     ],
     "length": 1
