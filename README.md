@@ -19,3 +19,7 @@ The genesis block from `/chain` path:
 
 - httplib for API routes
 - nlohmann::json for json formating and stringify objects
+
+
+## New Trx
+![image](https://github.com/user-attachments/assets/a3dccd80-fac1-44d1-843c-5fc4b91c7fd8)
